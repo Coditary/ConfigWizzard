@@ -1,0 +1,210 @@
+{
+  "formatVersion": 1,
+  "id": "full_demo",
+  "title": "ConfigWizard Full Demo",
+  "description": "Showcases all question types, groups, review, and conditional logic.",
+  "review": {
+    "enabled": true,
+    "prompt": "Save these answers? [Y/n]: "
+  },
+  "groups": [
+    {
+      "id": "Project",
+      "title": "Project Setup",
+      "description": "Name, namespace, and appearance"
+    },
+    {
+      "id": "Features",
+      "title": "Features & Scaling",
+      "description": "Modules, workers, and tuning"
+    },
+    {
+      "id": "CI",
+      "title": "Continuous Integration",
+      "description": "Pipeline and documentation links"
+    },
+    {
+      "id": "Advanced",
+      "title": "Advanced Options",
+      "description": "Logging, telemetry, and experimental flags"
+    }
+  ],
+  "effects": [
+    {
+      "id": "apply_theme",
+      "watch": ["dark_mode"],
+      "action": "app.theme.set",
+      "args": {
+        "enabled": "values.dark_mode"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "key": "project_name",
+      "group": "Project",
+      "type": "string",
+      "prompt": "Project name",
+      "help": "Display name used in generated files.",
+      "placeholder": "My Awesome App",
+      "default": "My App",
+      "transform": ["trim"],
+      "validate": {
+        "minLength": 3,
+        "message": "Project name must have at least 3 characters."
+      }
+    },
+    {
+      "key": "project_slug",
+      "group": "Project",
+      "type": "string",
+      "hidden": true,
+      "defaultExpr": "slugify(values.project_name)",
+      "aliases": ["name_slug"],
+      "validate": {
+        "pattern": "^[a-z0-9-]+$",
+        "message": "Slug may only contain lowercase letters, digits, and hyphens."
+      }
+    },
+    {
+      "key": "namespace",
+      "group": "Project",
+      "type": "string",
+      "prompt": "C++ namespace",
+      "default": "sample",
+      "validate": {
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+        "message": "Namespace must be a valid C++ identifier."
+      }
+    },
+    {
+      "key": "dark_mode",
+      "group": "Project",
+      "type": "bool",
+      "prompt": "Enable dark mode",
+      "default": false
+    },
+    {
+      "key": "license",
+      "group": "Features",
+      "type": "choice",
+      "prompt": "License",
+      "choices": [
+        { "value": "mit", "label": "MIT" },
+        { "value": "apache", "label": "Apache 2.0" },
+        { "value": "proprietary", "label": "Proprietary" }
+      ],
+      "default": "mit"
+    },
+    {
+      "key": "features",
+      "group": "Features",
+      "type": "multiselect",
+      "prompt": "Enabled modules",
+      "help": "Comma-separated values or JSON array, e.g. core,ui",
+      "choices": [
+        { "value": "core", "label": "Core runtime" },
+        { "value": "network", "label": "Networking" },
+        { "value": "ui", "label": "User interface" }
+      ],
+      "default": ["core", "ui"],
+      "validate": { "minItems": 1, "message": "Select at least one feature." }
+    },
+    {
+      "key": "worker_count",
+      "group": "Features",
+      "type": "integer",
+      "prompt": "Worker threads",
+      "default": 4,
+      "validate": { "min": 1, "max": 16, "message": "Use between 1 and 16 workers." }
+    },
+    {
+      "key": "cpu_budget",
+      "group": "Features",
+      "type": "number",
+      "prompt": "CPU budget (0.0 – 1.0)",
+      "default": 0.5,
+      "validate": { "min": 0.0, "max": 1.0 }
+    },
+    {
+      "key": "include_ci",
+      "group": "CI",
+      "type": "bool",
+      "prompt": "Include CI config?",
+      "default": true
+    },
+    {
+      "key": "ci_provider",
+      "group": "CI",
+      "type": "choice",
+      "prompt": "CI provider",
+      "choices": [
+        { "value": "github", "label": "GitHub Actions", "when": "values.license != 'proprietary'" },
+        { "value": "gitlab", "label": "GitLab CI" },
+        { "value": "internal", "label": "Internal pipeline", "when": "values.license == 'proprietary'" }
+      ],
+      "default": "github",
+      "when": "values.include_ci == true"
+    },
+    {
+      "key": "docs_url",
+      "group": "CI",
+      "type": "string",
+      "prompt": "Documentation URL",
+      "placeholder": "https://docs.example.com",
+      "optional": true,
+      "when": "values.include_ci == true",
+      "validateExpr": "empty(values.docs_url) || matches(values.docs_url, '^https?://')"
+    },
+    {
+      "key": "output_dir",
+      "group": "CI",
+      "type": "path",
+      "prompt": "Output directory (optional)",
+      "optional": true,
+      "placeholder": "/tmp/my-project"
+    },
+    {
+      "key": "log_level",
+      "group": "Advanced",
+      "type": "choice",
+      "prompt": "Log level",
+      "choices": [
+        { "value": "trace", "label": "Trace" },
+        { "value": "debug", "label": "Debug" },
+        { "value": "info", "label": "Info" },
+        { "value": "warn", "label": "Warn" },
+        { "value": "error", "label": "Error" }
+      ],
+      "default": "info"
+    },
+    {
+      "key": "telemetry",
+      "group": "Advanced",
+      "type": "bool",
+      "prompt": "Enable anonymous telemetry",
+      "default": false
+    },
+    {
+      "key": "experimental",
+      "group": "Advanced",
+      "type": "multiselect",
+      "prompt": "Experimental flags",
+      "choices": [
+        { "value": "async_io", "label": "Async I/O" },
+        { "value": "gpu_accel", "label": "GPU acceleration" },
+        { "value": "jit", "label": "JIT compilation" },
+        { "value": "wasm", "label": "WebAssembly plugins" }
+      ],
+      "default": []
+    },
+    {
+      "key": "max_memory",
+      "group": "Advanced",
+      "type": "integer",
+      "prompt": "Max memory (MB)",
+      "default": 512,
+      "validate": { "min": 64, "max": 8192, "message": "Use between 64 and 8192 MB." }
+    }
+  ]
+}

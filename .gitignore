@@ -1,0 +1,14 @@
+/target/
+/tui/build/
+/tui/.cache/
+
+*.o
+*.a
+*.so
+*.dylib
+
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo

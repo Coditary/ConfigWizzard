@@ -1,0 +1,63 @@
+# ConfigWizard — terminal-default background, Tokyo Night foreground accents
+
+@theme {
+  border-style: heavy;
+  accent: #7aa2f7;
+  muted: #737aa2;
+}
+
+* {
+  color: #c0caf5;
+}
+
+Label {
+  color: #c0caf5;
+}
+
+Panel {
+  border-color: #414868;
+  title-color: bold #7aa2f7;
+}
+
+TextInput {
+  color: #c0caf5;
+  focused-color: bold #c0caf5;
+}
+
+ComboBox {
+  color: #c0caf5;
+  selected-color: bold #7aa2f7;
+}
+
+Checkbox {
+  color: #c0caf5;
+}
+
+Checkbox:checked {
+  color: #9ece6a bold;
+}
+
+Checkbox:focused {
+  color: #7aa2f7;
+}
+
+Button {
+  color: #737aa2;
+}
+
+Button:focused {
+  color: #9ece6a bold;
+}
+
+Separator {
+  color: #292e42;
+}
+
+.muted {
+  color: #737aa2;
+}
+
+.accent {
+  color: #7aa2f7;
+  bold: true;
+}

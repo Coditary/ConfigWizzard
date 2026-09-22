@@ -1,0 +1,251 @@
+{
+  "formatVersion": 1,
+  "id": "project_scaffold_demo",
+  "title": "Neues Projekt",
+  "description": "Beispiel-Wizard: Sprache, Build, VCS und QA mit verschachtelter, bedingter Konfiguration.",
+  "review": {
+    "enabled": true,
+    "prompt": "Projekt mit diesen Einstellungen erstellen? [Y/n]: "
+  },
+  "groups": [
+    {
+      "id": "Project",
+      "title": "Projekt",
+      "description": "Name und Programmiersprache"
+    },
+    {
+      "id": "Build",
+      "title": "Build",
+      "description": "Build-Tool und Paketmanager",
+      "sections": [
+        { "id": "toggle", "title": "Aktivierung" },
+        { "id": "tool", "title": "Build-Tool", "description": "Paketmanager und Build-System" }
+      ]
+    },
+    {
+      "id": "VCS",
+      "title": "Version Control",
+      "description": "Versionsverwaltung für das Projekt",
+      "sections": [
+        { "id": "toggle", "title": "Aktivierung" },
+        { "id": "provider", "title": "Anbieter" },
+        {
+          "id": "qa",
+          "title": "Qualitätssicherung",
+          "description": "Aktiviert den separaten QA-Schritt im Wizard."
+        }
+      ]
+    },
+    {
+      "id": "Quality",
+      "title": "Qualitätssicherung",
+      "description": "Tests, Linting, Formatter und weitere QA-Tools",
+      "when": "values.use_qa == true",
+      "sections": [
+        {
+          "id": "features",
+          "title": "Features",
+          "description": "Wähle die Bereiche, die eingerichtet werden sollen."
+        },
+        { "id": "tests", "title": "Tests" },
+        { "id": "linting", "title": "Linting" },
+        { "id": "formatter", "title": "Formatter" },
+        { "id": "typecheck", "title": "Typprüfung" }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "key": "project_name",
+      "group": "Project",
+      "type": "string",
+      "prompt": "Projektname",
+      "help": "Anzeigename für generierte Dateien und Ordner.",
+      "placeholder": "mein-projekt",
+      "default": "mein-projekt",
+      "transform": ["trim"],
+      "validate": {
+        "minLength": 2,
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+        "message": "Projektname: mindestens 2 Zeichen, nur Buchstaben, Ziffern, Punkt, Unterstrich und Bindestrich."
+      }
+    },
+    {
+      "key": "project_slug",
+      "group": "Project",
+      "type": "string",
+      "hidden": true,
+      "defaultExpr": "slugify(values.project_name)"
+    },
+    {
+      "key": "language",
+      "group": "Project",
+      "type": "choice",
+      "prompt": "Programmiersprache",
+      "help": "Bestimmt verfügbare Build-Tools und QA-Optionen.",
+      "choices": [
+        { "value": "typescript", "label": "TypeScript" },
+        { "value": "rust", "label": "Rust" },
+        { "value": "python", "label": "Python" }
+      ],
+      "default": "typescript"
+    },
+    {
+      "key": "use_build_tool",
+      "group": "Build",
+      "section": "toggle",
+      "type": "bool",
+      "prompt": "Build-Tool verwenden",
+      "help": "Deaktivieren für minimale Skripte ohne Paketmanager.",
+      "default": true
+    },
+    {
+      "key": "build_tool",
+      "group": "Build",
+      "section": "tool",
+      "type": "choice",
+      "prompt": "Build-Tool",
+      "help": "Nur Optionen für die gewählte Sprache werden angezeigt.",
+      "when": "values.use_build_tool == true",
+      "choices": [
+        { "value": "npm", "label": "npm", "when": "values.language == 'typescript'" },
+        { "value": "pnpm", "label": "pnpm", "when": "values.language == 'typescript'" },
+        { "value": "bun", "label": "Bun", "when": "values.language == 'typescript'" },
+        { "value": "cargo", "label": "Cargo", "when": "values.language == 'rust'" },
+        { "value": "poetry", "label": "Poetry", "when": "values.language == 'python'" },
+        { "value": "uv", "label": "uv", "when": "values.language == 'python'" },
+        { "value": "pip", "label": "pip + venv", "when": "values.language == 'python'" }
+      ],
+      "default": "npm"
+    },
+    {
+      "key": "use_vcs",
+      "group": "VCS",
+      "section": "toggle",
+      "type": "bool",
+      "prompt": "Version Control verwenden",
+      "default": true
+    },
+    {
+      "key": "vcs_provider",
+      "group": "VCS",
+      "section": "provider",
+      "type": "choice",
+      "prompt": "VCS-Anbieter",
+      "when": "values.use_vcs == true",
+      "choices": [
+        { "value": "git", "label": "Git" },
+        { "value": "mercurial", "label": "Mercurial" },
+        { "value": "jj", "label": "Jujutsu (jj)" }
+      ],
+      "default": "git"
+    },
+    {
+      "key": "use_qa",
+      "group": "VCS",
+      "section": "qa",
+      "type": "bool",
+      "prompt": "Qualitätssicherung aktivieren",
+      "help": "Tests, Linting, Formatter und statische Analyse.",
+      "default": true
+    },
+    {
+      "key": "qa_features",
+      "group": "Quality",
+      "section": "features",
+      "type": "multiselect",
+      "prompt": "QA-Features",
+      "help": "Wähle die gewünschten Bereiche. Darunter erscheinen die Detail-Optionen.",
+      "choices": [
+        { "value": "tests", "label": "Tests" },
+        { "value": "linting", "label": "Linting" },
+        { "value": "formatter", "label": "Formatter" },
+        { "value": "typecheck", "label": "Typprüfung", "when": "values.language == 'typescript'" }
+      ],
+      "default": ["tests", "linting", "formatter"],
+      "validate": { "minItems": 1, "message": "Mindestens ein QA-Feature auswählen." }
+    },
+    {
+      "key": "test_types",
+      "group": "Quality",
+      "section": "tests",
+      "type": "multiselect",
+      "prompt": "Test-Arten",
+      "help": "Welche Testebenen sollen eingerichtet werden?",
+      "when": "matches(values.qa_features, 'tests')",
+      "choices": [
+        { "value": "unit", "label": "Unit-Tests" },
+        { "value": "integration", "label": "Integrationstests" },
+        { "value": "system", "label": "System-/E2E-Tests" }
+      ],
+      "default": ["unit"],
+      "validate": { "minItems": 1, "message": "Mindestens eine Test-Art auswählen." }
+    },
+    {
+      "key": "test_framework",
+      "group": "Quality",
+      "section": "tests",
+      "type": "choice",
+      "prompt": "Test-Framework",
+      "when": "matches(values.qa_features, 'tests')",
+      "choices": [
+        { "value": "vitest", "label": "Vitest", "when": "values.language == 'typescript'" },
+        { "value": "jest", "label": "Jest", "when": "values.language == 'typescript'" },
+        { "value": "cargo-test", "label": "cargo test (built-in)", "when": "values.language == 'rust'" },
+        { "value": "pytest", "label": "pytest", "when": "values.language == 'python'" },
+        { "value": "unittest", "label": "unittest (stdlib)", "when": "values.language == 'python'" }
+      ],
+      "default": "vitest"
+    },
+    {
+      "key": "test_coverage",
+      "group": "Quality",
+      "section": "tests",
+      "type": "bool",
+      "prompt": "Coverage-Reports aktivieren",
+      "when": "matches(values.qa_features, 'tests')",
+      "default": false
+    },
+    {
+      "key": "lint_tool",
+      "group": "Quality",
+      "section": "linting",
+      "type": "choice",
+      "prompt": "Linter",
+      "when": "matches(values.qa_features, 'linting')",
+      "choices": [
+        { "value": "eslint", "label": "ESLint", "when": "values.language == 'typescript'" },
+        { "value": "biome", "label": "Biome", "when": "values.language == 'typescript'" },
+        { "value": "clippy", "label": "Clippy", "when": "values.language == 'rust'" },
+        { "value": "ruff", "label": "Ruff", "when": "values.language == 'python'" },
+        { "value": "pylint", "label": "Pylint", "when": "values.language == 'python'" }
+      ],
+      "default": "eslint"
+    },
+    {
+      "key": "formatter_tool",
+      "group": "Quality",
+      "section": "formatter",
+      "type": "choice",
+      "prompt": "Formatter",
+      "when": "matches(values.qa_features, 'formatter')",
+      "choices": [
+        { "value": "prettier", "label": "Prettier", "when": "values.language == 'typescript'" },
+        { "value": "biome", "label": "Biome", "when": "values.language == 'typescript'" },
+        { "value": "rustfmt", "label": "rustfmt", "when": "values.language == 'rust'" },
+        { "value": "black", "label": "Black", "when": "values.language == 'python'" },
+        { "value": "ruff-format", "label": "Ruff (format)", "when": "values.language == 'python'" }
+      ],
+      "default": "prettier"
+    },
+    {
+      "key": "typecheck_strict",
+      "group": "Quality",
+      "section": "typecheck",
+      "type": "bool",
+      "prompt": "Strikter TypeScript-Modus (strict)",
+      "when": "values.language == 'typescript' && matches(values.qa_features, 'typecheck')",
+      "default": true
+    }
+  ]
+}

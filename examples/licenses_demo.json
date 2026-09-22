@@ -1,0 +1,57 @@
+{
+  "formatVersion": 1,
+  "id": "licenses_demo",
+  "title": "License Picker Demo",
+  "description": "Demonstrates fuzzy selection over a long list of licenses.",
+  "review": { "enabled": false },
+  "groups": [
+    {
+      "id": "License",
+      "title": "License Selection",
+      "description": "Pick a license from a long list"
+    }
+  ],
+  "questions": [
+    {
+      "key": "license",
+      "group": "License",
+      "type": "choice",
+      "prompt": "Choose a license",
+      "choices": [
+        { "value": "0bsd", "label": "0BSD" },
+        { "value": "afl-3.0", "label": "AFL-3.0" },
+        { "value": "agpl-3.0", "label": "AGPL-3.0" },
+        { "value": "apache-2.0", "label": "Apache-2.0" },
+        { "value": "artistic-2.0", "label": "Artistic-2.0" },
+        { "value": "bsd-1-clause", "label": "BSD-1-Clause" },
+        { "value": "bsd-2-clause", "label": "BSD-2-Clause" },
+        { "value": "bsd-3-clause", "label": "BSD-3-Clause" },
+        { "value": "bsl-1.0", "label": "BSL-1.0" },
+        { "value": "cc0-1.0", "label": "CC0-1.0" },
+        { "value": "cddl-1.0", "label": "CDDL-1.0" },
+        { "value": "cpl-1.0", "label": "CPL-1.0" },
+        { "value": "epl-2.0", "label": "EPL-2.0" },
+        { "value": "eupl-1.2", "label": "EUPL-1.2" },
+        { "value": "gpl-2.0", "label": "GPL-2.0" },
+        { "value": "gpl-3.0", "label": "GPL-3.0" },
+        { "value": "isc", "label": "ISC" },
+        { "value": "lgpl-2.1", "label": "LGPL-2.1" },
+        { "value": "lgpl-3.0", "label": "LGPL-3.0" },
+        { "value": "mit", "label": "MIT" },
+        { "value": "mpl-2.0", "label": "MPL-2.0" },
+        { "value": "ms-pl", "label": "MS-PL" },
+        { "value": "ncsa", "label": "NCSA" },
+        { "value": "ofl-1.1", "label": "OFL-1.1" },
+        { "value": "osl-3.0", "label": "OSL-3.0" },
+        { "value": "php-3.0", "label": "PHP-3.0" },
+        { "value": "postgresql", "label": "PostgreSQL" },
+        { "value": "unlicense", "label": "Unlicense" },
+        { "value": "upl-1.0", "label": "UPL-1.0" },
+        { "value": "vim", "label": "Vim" },
+        { "value": "wtfpl", "label": "WTFPL" },
+        { "value": "zlib", "label": "Zlib" }
+      ],
+      "default": "mit"
+    }
+  ]
+}

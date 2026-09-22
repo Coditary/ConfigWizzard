@@ -1,0 +1,16 @@
+[package]
+name = "configwizard-ui-cli"
+description = "Sequential inline CLI frontend for ConfigWizard"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+configwizard-core = { path = "../../configwizard-core" }
+
+[[bin]]
+name = "configwizard-demo"
+path = "src/bin/configwizard-demo.rs"
+
+[dev-dependencies]
+indexmap = "2"

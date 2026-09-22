@@ -1,0 +1,12 @@
+{
+  "project_name": "Coditary Demo",
+  "namespace": "demo",
+  "dark_mode": "true",
+  "license": "mit",
+  "features": "[\"core\",\"network\"]",
+  "worker_count": "8",
+  "cpu_budget": "0.75",
+  "include_ci": "true",
+  "ci_provider": "github",
+  "docs_url": "https://docs.example.com"
+}
